@@ -340,7 +340,7 @@ export class AllocationService {
       ALLOCATION_ATTEMPT_JOB,
       { rideId, attempt },
       {
-        jobId: `ride:${rideId}:attempt:${attempt}`,
+        jobId: `ride-${rideId}:attempt:${attempt}`,
         delay: delayMs,
         removeOnComplete: true,
         removeOnFail: 1000,
