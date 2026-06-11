@@ -1,0 +1,13 @@
+export enum RideState {
+  REQUESTED = 'REQUESTED',
+  SEARCHING = 'SEARCHING',
+  ASSIGNED = 'ASSIGNED',
+  TIMEOUT = 'TIMEOUT',
+}
+
+export enum OfferStatus {
+  OFFERED = 'OFFERED',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED',
+}

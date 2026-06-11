@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vybe-postgres
+    environment:
+      POSTGRES_USER: vybe
+      POSTGRES_PASSWORD: vybe
+      POSTGRES_DB: vybe_driver_allocation
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: vybe-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  app:
+    build: .
+    container_name: vybe-driver-allocation-api
+    profiles: ["app"]
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: vybe
+      POSTGRES_PASSWORD: vybe
+      POSTGRES_DB: vybe_driver_allocation
+      DB_SYNCHRONIZE: "true"
+      DB_LOGGING: "false"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      ALLOCATION_BATCH_SIZE: 3
+      ALLOCATION_OFFER_TIMEOUT_MS: 8000
+      ALLOCATION_MAX_ATTEMPTS: 3
+      ALLOCATION_BASE_RADIUS_KM: 5
+      ALLOCATION_RADIUS_MULTIPLIER: 2
+      ALLOCATION_CANDIDATE_LIMIT: 50
+      DRIVER_ASSIGNMENT_TTL_SECONDS: 7200
+      RIDE_STATE_TTL_SECONDS: 86400
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:
